@@ -82,6 +82,8 @@ fn mouse() {
     let (display_width, display_height) = enigo.main_display_size();
     let list = [("leftclick", 1), ("rightclick", 1), ("lefthold", 1), ("righthold", 1), ("leftdrag", 1), ("rightdrag", 1), ("drag", 1), ("move", 1), ("scrollx", 1), ("scrolly", 1), ("scrollxy", 1), ("none", 10)];
     let index = WeightedIndex::new(list.iter().map(|item| item.1)).unwrap();
+    let speedlist = [(Speed::Slow, 7), (Speed::Fast, 3), (Speed::Fastest, 1)];
+    let speedindex = WeightedIndex::new(list.iter().map(|item| item.1)).unwrap();
     loop {
         match list[index.sample(&mut rng)].0 {
             "leftclick" => {
@@ -102,16 +104,16 @@ fn mouse() {
             },
             "leftdrag" => {
                 mouse::down(Button::Left);
-                mouse::slow_drag_rel();
+                mouse::slow_drag_rel(rng.gen_range(0..=display_width), rng.gen_range(0..=display_height), speedlist[speedindex.sample(&mut rng)].0);
                 mouse::up(Button::Left);
             },
             "rightdrag" => {
                 mouse::down(Button::Right);
-                mouse::slow_drag_rel();
+                mouse::slow_drag_rel(rng.gen_range(0..=display_width), rng.gen_range(0..=display_height), speedlist[speedindex.sample(&mut rng)].0);
                 mouse::up(Button::Right);
             },
             "drag" => {
-                mouse::slow_drag_rel(rng.gen_range(0..=));
+                mouse::slow_drag_rel(rng.gen_range(0..=display_width), rng.gen_range(0..=display_height), speedlist[speedindex.sample(&mut rng)].0);
             },
             "scrollx" => {
                 mouse::scroll(ScrollAxis::X, rng.gen_range(1..=10));
